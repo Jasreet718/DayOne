@@ -1,0 +1,7 @@
+itHub Username: albinmathew24
+Repo Link: https://github.com/Jasreet718/DayOne
+Team Name: DayOne 
+Team mates: Jotish Chowdary Boddu, Tanveer Mangat, And Jasreet Mangat
+
+git config --global user.name "albinmathew24"
+git config --global user.email "axa210254@utdallas.edu"
