@@ -8,12 +8,11 @@ age = int(fields[2])
 date = fields[3]
 year = int(date[0:4]) 
 addr = fields[4].title() 
-status = fields[6]
 
 # Step 3:
 years_unsolved = 2026 - year
 
 # Step 4: 
-summary = f"CASE: {name} ({sex}, {age}) | {date} | {addr} | " \
-f"{status} — {years_unsolved} years without an arrest"
-print(summary)
+print("CASE                         AGE    YEARS UNSOLVED")
+print()
+print(f"{name} ({sex})              {age}        {years_unsolved}")
