@@ -1,4 +1,4 @@
-# intake_safe.py — Week 6: Bulletproof Intake
+# src/intake.py — Week 6: Bulletproof Intake (was intake_safe.py, moved in week 8)
 # Loads 100 CSV rows, quarantines the damaged ones, crashes on nothing.
 
 # The csv module knows how to split a CSV line properly — including commas
@@ -93,10 +93,10 @@ def load_cases(path):
 
 
 # Everything below only runs when I launch THIS file directly, with
-# "python3 intake_safe.py". Python sets __name__ to "__main__" in that case.
-# When some other file imports me instead — like test_intake.py doing
-# "from intake_safe import parse_row" — __name__ is "intake_safe", this is
-# False, and the report is skipped. Without this guard, importing the file
+# "python3 src/intake.py" from the repo root. Python sets __name__ to
+# "__main__" in that case. When some other file imports me instead — like
+# tests/test_intake.py doing "from src.intake import parse_row" — __name__ is
+# "src.intake", this is False, and the report is skipped. Without this guard, importing the file
 # would run the whole report as a side effect, and pytest would crash on
 # FileNotFoundError whenever it was started from another folder.
 if __name__ == "__main__":
@@ -124,10 +124,10 @@ if __name__ == "__main__":
 
     # Slide 13 lists the pytest result as part of the week's report, so it
     # gets printed here. It's plain text, so it does not check anything —
-    # run "pytest test_intake.py" to actually verify it.
+    # run "pytest" from the repo root to actually verify it.
     print()
     # The $ at the front is just the terminal prompt, copied from the slide so
     # the line reads like a command someone typed.
-    print("$ pytest test_intake.py  ->  3 passed")
+    print("$ pytest  ->  3 passed")
 
 

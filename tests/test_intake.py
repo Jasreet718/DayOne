@@ -1,12 +1,13 @@
-# test_intake.py — Week 6: proof the parser works
-# Run it with:  pytest test_intake.py
+# tests/test_intake.py — Week 6: proof the parser works (moved into tests/ in week 8)
+# Run it from the repo root with:  pytest
 
 # pytest is the testing tool. I need it here for pytest.raises() below.
 import pytest
 
-# Pull in the one function I'm testing from my other file. Note I import
-# parse_row only — the tests don't care about the file loading at all.
-from intake_safe import parse_row
+# Pull in the one function I'm testing. Week 8: the parser now lives in the
+# src/ package, so "src.intake" means "the intake.py file inside src/".
+# This only works because src/ has an __init__.py and pytest runs from the root.
+from src.intake import parse_row
 
 
 # pytest finds tests by name: any function starting with "test_" gets run.

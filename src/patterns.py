@@ -1,4 +1,4 @@
-# pattern_hunt.py — Week 5: Pattern Hunters
+# src/patterns.py — Week 5: Pattern Hunters (was pattern_hunt.py, moved in week 8)
 # Mines 24 free-text tips for phones, dates, case refs, and beats.
 
 # Loads Python's regular-expression toolkit. The only thing I use out of it is
@@ -98,34 +98,40 @@ def summarize_tip(i, text):
     return f"TIP {i}: phone={phones} date={dates} case={refs} beat={beats}"
 
 
-# open() finds and opens the file. .readlines() reads the whole thing and hands
-# back a LIST of strings, one per line. 24 lines in the file = 24 items here.
-tips = open("data/wk05_data_tipline.txt").readlines()
+# Week 8: this file is now a module other files import ("from src.patterns
+# import extract_phones"). An import runs the WHOLE file, so without this guard
+# every import would also print the 24-tip report. The report below now only
+# runs when I launch this file directly: python3 src/patterns.py
+if __name__ == "__main__":
 
-# A counter, starting at zero. It lives OUT here, before the loop — put it
-# inside and it would reset to 0 on every tip, ending up at 1 or 0.
-with_callback = 0
+    # open() finds and opens the file. .readlines() reads the whole thing and hands
+    # back a LIST of strings, one per line. 24 lines in the file = 24 items here.
+    tips = open("data/wk05_data_tipline.txt").readlines()
 
-# A plain "for tip in tips:" would give me the tip only. enumerate() hands back
-# TWO things each pass: a running number and the item. start=1 makes it count
-# 1, 2, 3 instead of Python's usual 0, 1, 2.
-for i, tip in enumerate(tips, start=1):
-    # summarize_tip returns a string; print() puts it on the screen.
-    # Runs once per tip, so this prints 24 lines.
-    print(summarize_tip(i, tip))
-    # Call the phone tool again, this time just to ask "did it find anything?"
-    # In an if, Python treats an empty list [] as False and a list with
-    # anything in it as True. So this reads: "if any phone was found".
-    if extract_phones(tip):
-        # += 1 means: take the current value, add one, store it back.
-        with_callback += 1
+    # A counter, starting at zero. It lives OUT here, before the loop — put it
+    # inside and it would reset to 0 on every tip, ending up at 1 or 0.
+    with_callback = 0
 
-# print() with nothing inside prints one blank line, to separate the report.
-print()
-# len() counts the items in the list — 24, with no loop needed.
-print(f"Tips processed:       {len(tips)}")
-# The counter the loop built up.
-print(f"Tips with a callback: {with_callback}")
-# No second counter needed: every tip is either one or the other, so the ones
-# without a callback are just the total minus the ones with.
-print(f"Tips with NO callback: {len(tips) - with_callback}  <- these leads die without follow-up")
+    # A plain "for tip in tips:" would give me the tip only. enumerate() hands back
+    # TWO things each pass: a running number and the item. start=1 makes it count
+    # 1, 2, 3 instead of Python's usual 0, 1, 2.
+    for i, tip in enumerate(tips, start=1):
+        # summarize_tip returns a string; print() puts it on the screen.
+        # Runs once per tip, so this prints 24 lines.
+        print(summarize_tip(i, tip))
+        # Call the phone tool again, this time just to ask "did it find anything?"
+        # In an if, Python treats an empty list [] as False and a list with
+        # anything in it as True. So this reads: "if any phone was found".
+        if extract_phones(tip):
+            # += 1 means: take the current value, add one, store it back.
+            with_callback += 1
+
+    # print() with nothing inside prints one blank line, to separate the report.
+    print()
+    # len() counts the items in the list — 24, with no loop needed.
+    print(f"Tips processed:       {len(tips)}")
+    # The counter the loop built up.
+    print(f"Tips with a callback: {with_callback}")
+    # No second counter needed: every tip is either one or the other, so the ones
+    # without a callback are just the total minus the ones with.
+    print(f"Tips with NO callback: {len(tips) - with_callback}  <- these leads die without follow-up")
