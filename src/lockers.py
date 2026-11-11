@@ -1,4 +1,4 @@
-# lockers.py — Week 4: Evidence Lockers
+# src/lockers.py — Week 4: Evidence Lockers (moved into src/ in week 8)
 # Dedupes the locker, profiles the victims, ranks the beats.
 
 
