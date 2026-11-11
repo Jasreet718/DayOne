@@ -1,9 +1,0 @@
-[
-  "test_intake.py::test_bad_age_rejected",
-  "test_intake.py::test_good_row_parses",
-  "test_intake.py::test_missing_date_rejected",
-  "test_intake.py::test_truncated_row_rejected",
-  "tests/test_intake.py::test_bad_age_rejected",
-  "tests/test_intake.py::test_good_row_parses",
-  "tests/test_intake.py::test_missing_date_rejected"
-]
