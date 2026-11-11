@@ -1,86 +1,75 @@
 # Jasreet — Week 6: Bulletproof Intake
-# 100 rows, 11 of them damaged. One bad row must not kill the other 99.
-# The plan: load what loads, quarantine what does not, report both.
+# 100 rows, 11 are broken. One bad row must not stop the other 99.
+# Three jobs: parse_row cleans a row, load_cases catches the bad ones, report prints.
 
-import csv              # csv splits the rows for me, even names with commas in them
-
-
-def parse_row(row):
-    """Turn one CSV row into a clean case dict, or raise ValueError saying why."""
-    # raise is the opposite of return. return hands back an answer,
-    # raise throws a problem up to whoever called me. This function
-    # does not decide what to do about bad rows. That is load_cases' job.
-
-    # Check 1: is the row even the right size?
-    # A 6 field row would crash on row[7] below, so I stop it here.
-    if len(row) != 8:
-        raise ValueError(f"expected 8 fields, got {len(row)}")
-
-    # Check 2: I write no check at all here.
-    # int("unknown") raises ValueError all by itself. I just let it fly.
-    age = int(row[3])
-
-    # Check 3: an empty date does not crash anything,
-    # so nothing raises on its own. I have to raise it myself.
-    if row[4].strip() == "":
-        raise ValueError("missing date")
-
-    # Got this far, so the row is good. Hand back a dict of clean fields.
-    return {
-        "case_id": row[0].strip(),
-        "name": row[1].strip().title(),
-        "sex": row[2].strip().upper(),
-        "age": age,
-        "date": row[4].strip(),
-        "address": row[5].strip().title(),
-        "beat": row[6].strip(),
-        "status": row[7].strip().upper(),
-    }
+import csv                   # bring in the csv tool so it splits each row for me
 
 
-def load_cases(path):
+def parse_row(row):          # make a tool called parse_row that takes one row
+    """Turn one CSV row into a clean case dict, or raise ValueError saying why."""   # what it does
+    # raise is like return, but it hands back a problem instead of an answer.
+
+    if len(row) != 8:        # if this row does not have exactly 8 pieces
+        raise ValueError(f"expected 8 fields, got {len(row)}")   # stop and say how many it had
+
+    age = int(row[3])        # turn piece 3, the age, from text into a real number
+
+    if row[4].strip() == "":  # if piece 4, the date, is empty
+        raise ValueError("missing date")   # stop and say the date is missing
+
+    return {                 # all 8 pieces are here and good, so hand back a dict
+        "case_id": row[0].strip(),          # piece 0 is the case id, spaces trimmed off
+        "name": row[1].strip().title(),     # piece 1 is the name, trimmed and capitalized
+        "sex": row[2].strip().upper(),      # piece 2 is the sex, made a capital letter
+        "age": age,                         # the number I already made up above
+        "date": row[4].strip(),             # piece 4 is the date, trimmed
+        "address": row[5].strip().title(),  # piece 5 is the address, trimmed and capitalized
+        "beat": row[6].strip(),             # piece 6 is the beat, trimmed
+        "status": row[7].strip().upper(),   # piece 7 is OPEN or CLOSED, made all capitals
+    }                        # the } closes the dict that started back at the return
+
+
+def load_cases(path):        # make a tool that takes the path to a file
     """Read the CSV. Return (good cases, quarantined rows)."""
-    good = []                          # the rows that parsed
-    quarantine = []                    # line number + reason for the ones that did not
+    good = []                # an empty list for the rows that work out
+    quarantine = []          # an empty list for the rows that fail, plus the reason
 
-    # newline="" is what the csv module wants so quoted fields work right.
-    with open(path, newline="") as case_file:
-        reader = csv.reader(case_file)
-        next(reader)                   # eat the header row so the loop only sees data
+    with open(path, newline="") as case_file:   # open the file, call it case_file, close it after
+        reader = csv.reader(case_file)          # hand the file to csv so it splits every row
+        next(reader)                            # pull off the header row and throw it away
 
-        # start=2 because the header was line 1, so the first data row is line 2.
-        # That makes my log line numbers match what I see in VS Code.
-        for line_num, row in enumerate(reader, start=2):
+        # start=2 because the header was line 1, so my log numbers match VS Code
+        for line_num, row in enumerate(reader, start=2):   # go through the rows, counting from 2
 
-            if not row:                # csv gives a blank line back as an empty list
-                continue               # it is not damage, it is not a row. skip it.
+            if not row:      # if the row is empty, which is the blank line in my file
+                continue     # skip it, because an empty line is not a row at all
 
-            try:
-                good.append(parse_row(row))      # the risky part
-            except ValueError as err:            # catch ValueError ONLY, never bare except
-                # "as err" names the error so str(err) gets me its message
-                quarantine.append((line_num, str(err)))
-            # No crash either way, so the loop keeps going. That is the whole point.
+            try:             # try the next line, and do not crash if it breaks
+                good.append(parse_row(row))      # clean this row and add it to the good list
+            except ValueError as err:            # if parse_row handed back a problem, catch it
+                # ValueError only. A plain "except" would also hide my own typos.
+                quarantine.append((line_num, str(err)))   # save the line number and the reason
 
-    return good, quarantine            # two values come back as a pair
+            # nothing crashed either way, so the next row still gets its turn
+
+    return good, quarantine  # hand back both lists at the same time
 
 
-def report(good, quarantine):
+def report(good, quarantine):   # make a tool that takes both lists
     """Print the counts and the full quarantine log."""
-    print(f"{'Rows loaded cleanly:':<23}{len(good)}")   # :<23 lines the numbers up
-    print(f"{'Rows quarantined:':<23}{len(quarantine)}")
-    print()
-    print("QUARANTINE LOG — every rejected row, with the reason:")
-    for line_num, reason in quarantine:
-        print(f"  line {line_num:>3}: {reason}")
-    print()
-    print("$ pytest test_intake.py  ->  3 passed")
+    print(f"{'Rows loaded cleanly:':<23}{len(good)}")        # print the label, then how many worked
+    print(f"{'Rows quarantined:':<23}{len(quarantine)}")     # print the label, then how many failed
+    print()                  # print a blank line
+    print("QUARANTINE LOG — every rejected row, with the reason:")   # print a heading for the log
+    for line_num, reason in quarantine:   # go through the bad rows, splitting each pair in two
+        print(f"  line {line_num:>3}: {reason}")   # print one log line for this bad row
+    print()                  # print a blank line
+    print("$ pytest test_intake.py  ->  3 passed")   # print the test result line
 
 
-# __name__ is "__main__" only when I run THIS file directly.
-# When test_intake.py imports parse_row, __name__ is "intake_safe" instead,
-# so this block is skipped and the tests stay quiet.
-if __name__ == "__main__":
-    # load_cases hands back two things, so I catch them in two names.
-    good, quarantine = load_cases("data/wk06_data_raw_cases_100.csv")
-    report(good, quarantine)
+# __name__ is "__main__" only when I run this file myself.
+# When test_intake.py imports parse_row, Python runs this whole file to find it.
+# Without this guard, that import would print the report every time I run pytest.
+if __name__ == "__main__":   # only do the two lines below when I run this file directly
+    good, quarantine = load_cases("data/wk06_data_raw_cases_100.csv")   # run the loader, catch both lists
+    report(good, quarantine)   # hand both lists to report so it prints everything
