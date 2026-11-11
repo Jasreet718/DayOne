@@ -1,0 +1,15 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Debug first_filter.py",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "${workspaceFolder}/first_filter.py",
+      "cwd": "${workspaceFolder}",
+      "console": "integratedTerminal",
+      "stopOnEntry": true,
+      "justMyCode": true
+    }
+  ]
+}
