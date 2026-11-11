@@ -1,0 +1,7 @@
+GitHub Username: tsinghutd
+Repo Link: https://github.com/Jasreet718/DayOne.git
+Team Name: DayOne
+Team mates: Jasreet Mangat, Albin AbrahamMathew and Jotish Chowdary Boddu
+
+git config --global user.name "tsinghutd"
+git config --global user.email "tsm230005@utdallas.edu"
